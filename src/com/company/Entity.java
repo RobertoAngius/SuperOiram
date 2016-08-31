@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Entity{
+public abstract class Entity{
     private Coordinates coord;
     private List<Pixel> shape;
 
