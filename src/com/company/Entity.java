@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Animated {
+public class Entity{
     private Coordinates coord;
     private List<Pixel> shape;
 
-    public Animated() {
+    public Entity() {
         this.shape = new ArrayList<>();
     }
 
 
-    public Animated(Coordinates coord) {
+    public Entity(Coordinates coord) {
         this.coord = coord;
         this.shape = new ArrayList<>();
     }

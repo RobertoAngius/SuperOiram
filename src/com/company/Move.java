@@ -5,7 +5,6 @@ import com.googlecode.lanterna.terminal.Terminal;
 
 import java.time.Duration;
 import java.time.LocalTime;
-import java.util.List;
 
 /**
  * Created by Roberto Angius on 2016-08-30.
@@ -14,28 +13,27 @@ public class Move {
 
     private Game game;
     private char[] keyInput = {'L', 'U', 'R'};
-    private Coordinates movement = new Coordinates(0,0);
 
     public Move(Game game) {
         this.game = game;
     }
 
-    public void move(Animated animated, Coordinates relCoord) {
-        animated.setCoord(new Coordinates(animated.getCoord().getX() + relCoord.getX(), animated.getCoord().getY() + relCoord.getY() ));
-        for (Pixel p : animated.getShape()) {
+    public void move(Entity entity, Coordinates relCoord) {
+        entity.setCoord(new Coordinates(entity.getCoord().getX() + relCoord.getX(), entity.getCoord().getY() + relCoord.getY()));
+        for (Pixel p : entity.getShape()) {
             p.setX(p.getX() + relCoord.getX());
             p.setY(p.getY() + relCoord.getY());
         }
     }
 
-    private char getKeyInput(int key){
+    private char getKeyInput(int key) {
         return keyInput[key];
     }
 
     public Coordinates getPlayerRelCord(Terminal terminal) throws InterruptedException {
         Key key;
         LocalTime tm = LocalTime.now();
-        Coordinates tempCoord = new Coordinates(0,0);
+        Coordinates tempCoord = new Coordinates(0, 0);
         do {
             Thread.sleep(5);
             key = terminal.readInput();
@@ -47,16 +45,15 @@ public class Move {
                     if (getKeyInput(j) == keyKind) {
                         switch (j) {
                             case 0:
-                                tempCoord = new Coordinates(-1,0);
+                                tempCoord = new Coordinates(-3, 0);
                                 break;
                             case 1:
-                                tempCoord = new Coordinates(1,-3);
+                                tempCoord = new Coordinates(1, -3);
                                 break;
                             case 2:
-                                tempCoord = new Coordinates(4,0);
+                                tempCoord = new Coordinates(4, 0);
                         }
                     }
-
                 }
 
                 System.out.println(key.getCharacter() + " " + key.getKind());
@@ -67,25 +64,59 @@ public class Move {
     }
 
     public void moveAll(Terminal terminal) throws InterruptedException {
-        if (isOnGround(game.getOiram(),game.getGround())){
-            move(game.getOiram(), new Coordinates(-1,0));
+        Coordinates temp = getPlayerRelCord(terminal);
+        int x = temp.getX();
+        int y = temp.getY();
+
+
+        if (x == 0 && y==0){
+            if (game.getRuleBook().canMove(game.getOiram(), game.getEntities(), "Left")) {
+                move(game.getOiram(), new Coordinates(-1, 0));
+            }
+            if (game.getRuleBook().canMove(game.getOiram(), game.getEntities(), "Down")) {
+                move(game.getOiram(), new Coordinates(0, 1));
+            }
         }else {
-            move(game.getOiram(), new Coordinates(-1,1));
-        } //Momentum)
-        move(game.getObstacle(), new Coordinates(-1,0));
-        move(game.getOiram(), getPlayerRelCord(terminal)); //Knapptryckning
-
-
-    }
-
-    private boolean isOnGround(Oiram oiram, Ground ground) {
-        for (Pixel pOiram : oiram.getShape()) {
-            for (Pixel pGround : ground.getShape()) {
-                if (pGround.getY()-1 == pOiram.getY()) {
-                    return true;
+            x--;
+            y++;
+            while (y != 0) {
+                if (y > 0) {
+                    if (game.getRuleBook().canMove(game.getOiram(), game.getEntities(), "Down")) {
+                        move(game.getOiram(), new Coordinates(0, 1));
+                    }
+                    y--;
+                } else if (y < 0) {
+                    if (game.getRuleBook().canMove(game.getOiram(), game.getEntities(), "Up")) {
+                        move(game.getOiram(), new Coordinates(0, -1));
+                    }
+                    y++;
                 }
+
+            }
+            while (x != 0) {
+                if (x > 0) {
+                    if (game.getRuleBook().canMove(game.getOiram(), game.getEntities(), "Right")) {
+                        move(game.getOiram(), new Coordinates(1, 0));
+
+                    }
+                    x--;
+                } else if (x < 0) {
+                    if (game.getRuleBook().canMove(game.getOiram(), game.getEntities(), "Left")) {
+                        move(game.getOiram(), new Coordinates(-1, 0));
+                    }
+                    x++;
+                }
+
             }
         }
-        return false;
+
+
+
+        for (Obstacle obs : game.getAllObstacles()) {
+            move(obs, new Coordinates(-1, 0));
+        }
+
     }
+
+
 }

@@ -7,4 +7,5 @@ import java.util.List;
  */
 public interface Draw {
     List<Pixel> blueprint();
+    void makeBlueprint(Coordinates centerCoord);
 }
