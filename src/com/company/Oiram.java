@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Oiram extends Animated implements Draw {
+public class Oiram extends Entity implements Draw {
 
     private boolean dead = false;
 
     public Oiram(Coordinates coord) {
         super(coord);
-        setShape(blueprint());
+        makeBlueprint(coord);
     }
 
-    public List<Pixel> blueprint() {
+    public void makeBlueprint(Coordinates centerCoord) {
         List<Pixel> templist = new ArrayList<>();
         templist.add(new Pixel(getCoord().getX(), getCoord().getY(),'█'));
         templist.add(new Pixel(getCoord().getX(), getCoord().getY() - 1,'∞'));
@@ -21,6 +21,10 @@ public class Oiram extends Animated implements Draw {
         templist.add(new Pixel(getCoord().getX(), getCoord().getY() + 1,'╚'));
         templist.add(new Pixel(getCoord().getX() + 1, getCoord().getY(),'┘'));
         templist.add(new Pixel(getCoord().getX() - 1, getCoord().getY(),'┌'));
-        return templist;
+        setShape( templist);
+    }
+
+    public List<Pixel> blueprint() {
+        return getShape();
     }
 }

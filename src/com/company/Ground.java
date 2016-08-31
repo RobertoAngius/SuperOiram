@@ -7,25 +7,28 @@ import java.util.List;
 import java.util.Random;
 
 
-public class Ground extends NonAnimated {
+public class Ground extends Entity implements Draw{
 
     public static  int groundLevel;
     public static  int groundWidth;
 
-
     public Ground(Terminal terminal) {
         super();
-        groundLevel = terminal.getTerminalSize().getRows()-5;
+        groundLevel = terminal.getTerminalSize().getRows();
         groundWidth = terminal.getTerminalSize().getColumns();
-        setShape(blueprint());
+        makeBlueprint(new Coordinates(0,groundLevel));
+    }
+
+    public void makeBlueprint(Coordinates centerCoord) {
+        List<Pixel> tempList = new ArrayList<>();
+        for (int i = 0; i <groundWidth; i++){
+            tempList.add(new Pixel(i,centerCoord.getY(),'█'));
+        }
+        setShape(tempList);
     }
 
     public List<Pixel> blueprint() {
-        List<Pixel> tempList = new ArrayList<>();
-        for (int i = 0; i <groundWidth; i++){
-            tempList.add(new Pixel(i,groundLevel,'█'));
-        }
-        return tempList;
+        return getShape();
     }
 
 

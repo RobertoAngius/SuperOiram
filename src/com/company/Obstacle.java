@@ -5,21 +5,25 @@ import java.util.List;
 import java.util.Random;
 
 
-public class Obstacle extends Animated implements Draw {
+public class Obstacle extends Entity implements Draw {
     public Obstacle(Coordinates coord) {
 
         super(coord);
-        setShape(blueprint());
+        makeBlueprint(new Coordinates(Ground.groundWidth, Ground.groundLevel));
 
     }
-    public List<Pixel> blueprint() {
+    public void makeBlueprint(Coordinates centerCoord) {
         List<Pixel> tempList = new ArrayList<>();
         Random rnd = new Random();
-        int ourRandom = rnd.nextInt(3) + 2;
+        int ourRandom = rnd.nextInt(8) + 2;
+        int ourRandomY = rnd.nextInt(Ground.groundLevel);
         for (int i = 0; i < ourRandom; i++){
-            tempList.add(new Pixel(i+10,Ground.groundLevel-1,'X')); //▓Ground.groundWidth
+            tempList.add(new Pixel(i+centerCoord.getX(),centerCoord.getY()- ourRandomY,'▓')); //▓Ground.groundWidth
         }
-        return tempList;
+        setShape(tempList);
+    }
+    public List<Pixel> blueprint() {
+        return getShape();
     }
 
 }
