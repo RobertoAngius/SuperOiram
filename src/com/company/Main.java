@@ -13,7 +13,7 @@ public class Main {
 
         Terminal terminal = TerminalFacade.createTerminal(System.in, System.out, Charset.forName("UTF-8"));
         terminal.enterPrivateMode();
-        Oiram oiram = new Oiram(new Coordinates(5, 5));
+        Oiram oiram = new Oiram(new Coordinates(30, 15));
         Game game = new Game(oiram, terminal);
 
         do {
